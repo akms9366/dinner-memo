@@ -1,0 +1,20 @@
+{
+  "name": "夕食献立メモ",
+  "short_name": "献立メモ",
+  "description": "夕食の献立をカレンダー形式で記録・管理するウェブアプリ",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#E8622A",
+  "orientation": "portrait-primary",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
