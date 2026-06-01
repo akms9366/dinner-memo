@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>夕食献立メモ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <span class="app-icon">🍳</span>
+        <h1 class="app-title">夕食献立メモ</h1>
+      </div>
+      <div class="header-right">
+        <button class="btn-icon" id="btn-scroll-shopping" title="買い物メモへ">🛒</button>
+        <button class="btn-icon" id="btn-open-export" title="エクスポート">📤</button>
+      </div>
+    </header>
+
+    <!-- Main: calendar + detail -->
+    <main class="app-main">
+
+      <!-- Calendar -->
+      <section class="calendar-section">
+        <div class="calendar-nav">
+          <button class="btn-nav" id="prev-month">‹</button>
+          <h2 class="calendar-month-title" id="calendar-title"></h2>
+          <button class="btn-nav" id="next-month">›</button>
+        </div>
+        <div class="calendar-weekdays">
+          <span class="wd">月</span><span class="wd">火</span><span class="wd">水</span>
+          <span class="wd">木</span><span class="wd">金</span><span class="wd sat">土</span>
+          <span class="wd sun">日</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </section>
+
+      <!-- Day detail panel -->
+      <section class="day-detail" id="day-detail">
+        <div class="day-detail-placeholder" id="day-detail-placeholder">
+          <span class="placeholder-icon">📅</span>
+          <p>日付をタップして<br>献立を記録しましょう</p>
+        </div>
+        <div class="day-detail-form" id="day-detail-form" style="display:none">
+          <div class="day-detail-header">
+            <h3 class="day-detail-title" id="day-detail-title"></h3>
+            <button class="btn-close" id="close-detail">✕</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">夕食メニュー</label>
+            <input type="text" class="form-input" id="dinner-title" placeholder="例：豚こまとキャベツのレンジ蒸し">
+          </div>
+          <div class="form-group">
+            <label class="form-label">レシピメモ</label>
+            <textarea class="form-textarea" id="dinner-recipe" rows="3" placeholder="作り方や食材の覚え書き…"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">リレー情報
+              <span class="label-hint">（翌日昼への回し分）</span>
+            </label>
+            <textarea class="form-textarea relay-field" id="dinner-relay" rows="2" placeholder="例：2人前作って半分はタッパーへ（火曜昼用）"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">備考</label>
+            <textarea class="form-textarea" id="dinner-notes" rows="2" placeholder="感想、次回の改善点など…"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn-delete" id="btn-delete-entry">削除</button>
+            <button class="btn-save" id="btn-save-entry">保存する</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Shopping section -->
+    <section class="shopping-section" id="shopping-section">
+      <div class="shopping-header">
+        <h2 class="section-title">🛒 買い物メモ</h2>
+        <div class="shopping-week-nav">
+          <button class="btn-nav sm" id="prev-week">‹</button>
+          <span class="shopping-week-label" id="shopping-week-label"></span>
+          <button class="btn-nav sm" id="next-week">›</button>
+        </div>
+      </div>
+
+      <div class="paste-area-wrap">
+        <textarea class="paste-area" id="paste-area"
+          placeholder="買い物リストをここにペーストして「リスト化」ボタンを押してください&#10;&#10;例：&#10;* 豚こま切れ肉：約250g&#10;* サバ水煮缶：1缶&#10;* キャベツ：1/2玉"></textarea>
+        <button class="btn-listify" id="btn-listify">リスト化する</button>
+      </div>
+
+      <div class="add-item-row">
+        <input type="text" class="form-input" id="new-item-input" placeholder="アイテムを直接追加…">
+        <button class="btn-add-item" id="btn-add-item">追加</button>
+      </div>
+
+      <ul class="shopping-list" id="shopping-list"></ul>
+
+      <div class="shopping-footer">
+        <button class="btn-clear-checked" id="btn-clear-checked">チェック済みを削除</button>
+        <span class="shopping-stats" id="shopping-stats"></span>
+      </div>
+    </section>
+
+  </div><!-- #app -->
+
+  <!-- Export modal -->
+  <div class="modal-overlay" id="export-modal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">📤 エクスポート</h3>
+        <button class="btn-close" id="close-export">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">対象期間</label>
+          <div class="export-range-row">
+            <input type="month" class="form-input" id="export-from">
+            <span class="range-sep">〜</span>
+            <input type="month" class="form-input" id="export-to">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">含める内容</label>
+          <div class="checkbox-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="include-menus" checked> 献立
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="include-shopping" checked> 買い物メモ
+            </label>
+          </div>
+        </div>
+        <div class="export-actions">
+          <button class="btn-export-md" id="btn-copy-markdown">
+            <span>Notion用マークダウン</span>
+            <small>コピーしてNotionにペースト</small>
+          </button>
+          <button class="btn-export-json" id="btn-download-json">
+            <span>JSONバックアップ</span>
+            <small>ファイルをダウンロード</small>
+          </button>
+        </div>
+        <div class="export-notice" id="export-notice" style="display:none"></div>
+        <div class="notion-tip">
+          <strong>Notionへの取り込み方：</strong>
+          「Notion用マークダウン」をコピーして、Notionのページに貼り付けるだけ！
+          見出し・チェックボックス・箇条書きがそのまま変換されます。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
